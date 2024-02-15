@@ -1,86 +1,100 @@
-export type LibBookInformation ={
-    id: number;
-    name?: string;
-    publication_year: number;
-    author: string;
-    is_available: boolean;
-    publisher: LibPublisher;
-    books: LibBook[];
-  }
-  
-  export type LibBook ={
-    id: number;
-    information: LibBookInformation;
-    borrowings: LibBorrowing[];
-    is_taken: boolean
-
-  }
-  
-  export type LibBorrowing ={
-    [x: string]: any;
-    id: number;
-    borrow_date: Date;
-    return_date: Date;
-    book_id: LibBook;
-    reader_id: LibReader;
-  }
-  
-  export type LibPublisher ={
-    id: number;
-    name: string;
-    address: string;
-    email: string;
-    information_books: LibBookInformation[];
-  }
-  
-  export type LibReader ={
-    id: number;
-    first_name: string;
-    last_name: string;
-    age: string;
-    borrowings: LibBorrowing[];
-  }
-  export type Laters ={
-    code: number; book_name: string; borrow_date: Date; reader_name: string;
-  }
-  export type Top_Books= {
-    bookId: string;
-    bookName: string;
-    bookInfo_is_available: boolean;
-    bookInfo_publication_year: number;
-    bookInfo_author: string;
-    bookInfo_publisherIdId: string;
-    count: number;
-  }
-  export type FiltersComponentProps = {
-    handleChangeValue: (name: string, value: Date | null | boolean | string) => void;
-    filterObject: { searchBorrowDate: Date | null; searchBookName: string; displayAll: boolean };
-  };
-  export type  FormDataBook= {
-    name: string;
-    author: string;
-    price:number;
-    publication_year: number;
-    numOfCopies:number;
-    publisher:LibPublisher|{};
-  }
-  
-export type   FormDataPublisher= {
-  name: string;
-  address: string;
-  email: string;
+export type LibBookInformation = {
+  id: string
+  name: string
+  publicationYear: Date
+  author: string
+  isAvailable: boolean
+  publisher: LibPublisher
+  books: LibBook[]
 }
-export type  FormDataReader ={
-  first_name: string;
-  last_name: string;
-  birth_date: Date;
+
+export type LibBook = {
+  id: string
+  information: LibBookInformation
+  borrowings: LibBorrowing[]
+  isTaken: boolean
+}
+
+export type LibBorrowing = {
+  id: string
+  borrowDate: Date
+  returnDate: Date
+  book: LibBook
+  reader: LibReader
+}
+
+export type LibPublisher = {
+  id: string
+  name: string
+  address: string
+  email: string
+  informationBooks: LibBookInformation[]
+}
+
+export type LibReader = {
+  id: string
+  firstName: string
+  lastName: string
+  age: string
+  borrowings: LibBorrowing[]
+}
+export type Laters = {
+  code: number
+  bookName: string
+  borrowDate: Date
+  readerName: string
+}
+export type Top_Books = {
+  bookId: string
+  bookName: string
+  bookInfo_is_available: boolean
+  bookInfo_publication_year: number
+  bookInfo_author: string
+  bookInfo_publisherIdId: string
+  count: number
+}
+export type FiltersComponentProps = {
+  handleChangeValue: (
+    name: string,
+    value: Date | null | boolean | string,
+  ) => void
+  filterObject: {
+    searchBorrowDate: Date | null
+    searchBookName: string
+    displayAll: boolean
+  }
+}
+export type FormDataBook = {
+  name: string
+  author: string
+  price: number
+  publicationYear: number
+  numOfCopies: number
+  publisher: LibPublisher | {}
+}
+
+export type FormDataPublisher = {
+  name: string
+  address: string
+  email: string
+}
+export type FormDataReader = {
+  firstName: string
+  lastName: string
+  birthDate: Date
 }
 export type DataGraph = {
-  bookName: string;
-  count: number | null;
-};
+  bookName: string
+  count: number | null
+}
 export type PublisherPayment = {
-  publisherid: string;
-  publishername: string;
-  paymentamount: string;
-};
+  publisherid: string
+  publishername: string
+  paymentamount: string
+}
+export type RowReader = {
+  code: string
+  Frist_Name: string
+  Last_Name: string
+  Age: string
+}

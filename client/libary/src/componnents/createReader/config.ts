@@ -1,13 +1,15 @@
-import * as yup from 'yup';
+import * as yup from 'yup'
 
 export const schema = yup
   .object({
-    first_name: yup.string().required("שדה זה חובה").min(2, "השם אינו תקין"),
-    last_name: yup.string().required("שדה זה חובה").min(2, "השם אינו תקין"),
-    birth_date: yup
+    firstName: yup.string().required('שדה זה חובה').min(2, 'השם אינו תקין'),
+    lastName: yup.string().required('שדה זה חובה').min(2, 'השם אינו תקין'),
+    birthDate: yup
       .date()
-      .required("שדה זה חובה")
-      .min(new Date("2000-01-01"), "התאריך המינימלי הוא 01/01/2000")
-      .max(new Date(new Date().setFullYear(new Date().getFullYear() - 1)), "התאריך המקסימלי הוא שנה פחות יומיים מהתאריך הנוכחי")
+      .required('שדה זה חובה')
+      .max(
+        new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+        'התאריך המקסימלי הוא שנה פחות מהתאריך הנוכחי',
+      ),
   })
-  .required();
+  .required()

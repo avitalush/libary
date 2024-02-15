@@ -1,27 +1,25 @@
-import  React ,{useEffect,useState}from 'react';
-import { useTheme } from '@mui/material/styles';
-import { LineChart, axisClasses } from '@mui/x-charts';
-import { ChartsTextStyle } from '@mui/x-charts/ChartsText';
-import { DataGraph, Top_Books } from '../interfaces';
-import {  getDataGraph } from '../api/borrowing';
-import { convertData } from './top_books/config';
-import Box from '@mui/material/Box';
-import { styles } from './top_books/style';
-
-
+import React, { useEffect, useState } from 'react'
+import { useTheme } from '@mui/material/styles'
+import { LineChart, axisClasses } from '@mui/x-charts'
+import { ChartsTextStyle } from '@mui/x-charts/ChartsText'
+import { DataGraph, Top_Books } from '../interfaces'
+import { getDataGraph } from '../Api/borrowing'
+import { convertData } from './top_books/config'
+import Box from '@mui/material/Box'
+import { styles } from './top_books/style'
 
 export default function Chart() {
-  const theme = useTheme();
+  const theme = useTheme()
 
-  const [data, setData] = useState<DataGraph[]>([]);
+  const [data, setData] = useState<DataGraph[]>([])
 
-useEffect(() => {
+  useEffect(() => {
     const fetchDataAndSetRows = async () => {
-      const response = await getDataGraph();
-   setData(convertData( response.topBorrowedBooks));
-    };
-    fetchDataAndSetRows();
-  }, []);
+      const response = await getDataGraph()
+      setData(convertData(response.topBorrowedBooks))
+    }
+    fetchDataAndSetRows()
+  }, [])
 
   return (
     <>
@@ -51,7 +49,7 @@ useEffect(() => {
                 fill: theme.palette.text.primary,
               },
               tickLabelStyle: theme.typography.body2 as ChartsTextStyle,
-              min: 0, 
+              min: 0,
               tickNumber: 6,
               max: 50,
             },
@@ -60,12 +58,16 @@ useEffect(() => {
             {
               dataKey: 'count',
               showMark: false,
-              color: theme.palette.primary.light,
+              color: "rgb(179,158,112)",
             },
           ]}
           sx={{
-            [`.${axisClasses.root} line`]: { stroke: theme.palette.text.secondary },
-            [`.${axisClasses.root} text`]: { fill: theme.palette.text.secondary },
+            [`.${axisClasses.root} line`]: {
+              stroke: theme.palette.text.secondary,
+            },
+            [`.${axisClasses.root} text`]: {
+              fill: theme.palette.text.secondary,
+            },
             [`& .${axisClasses.left} .${axisClasses.label}`]: {
               transform: 'translateX(-25px)',
             },
@@ -73,5 +75,5 @@ useEffect(() => {
         />
       </Box>
     </>
-  );
+  )
 }

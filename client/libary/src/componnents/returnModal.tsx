@@ -1,17 +1,19 @@
-import React, { useEffect } from 'react';
-import Swal from 'sweetalert2';
+import React, { useEffect } from 'react'
+import Swal from 'sweetalert2'
 
 interface SweetAlertProps {
-  onConfirm: () => void;
-  onCancel: () => void;
+  onConfirm: () => void
+  onCancel: () => void
 }
 
-const SweetAlertComponent: React.FC<SweetAlertProps> = ({ onConfirm, onCancel }) => {
+const SweetAlertComponent: React.FC<SweetAlertProps> = ({
+  onConfirm,
+  onCancel,
+}) => {
   useEffect(() => {
     const showSweetAlert = async () => {
       const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to return this!",
+        title: 'Are you sure you want to return?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, return it!',
@@ -22,7 +24,7 @@ const SweetAlertComponent: React.FC<SweetAlertProps> = ({ onConfirm, onCancel })
           cancelButton: 'btn btn-danger',
         },
         buttonsStyling: false,
-      });
+      })
 
       if (result.isConfirmed) {
         await Swal.fire({
@@ -32,8 +34,8 @@ const SweetAlertComponent: React.FC<SweetAlertProps> = ({ onConfirm, onCancel })
           customClass: {
             confirmButton: 'btn btn-success',
           },
-        });
-        onConfirm();
+        })
+        onConfirm()
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         await Swal.fire({
           title: 'Cancelled',
@@ -41,15 +43,15 @@ const SweetAlertComponent: React.FC<SweetAlertProps> = ({ onConfirm, onCancel })
           customClass: {
             confirmButton: 'btn btn-danger',
           },
-        });
-        onCancel();
+        })
+        onCancel()
       }
-    };
+    }
 
-    showSweetAlert();
-  }, [onConfirm, onCancel]);
+    showSweetAlert()
+  }, [onConfirm, onCancel])
 
-  return null;
-};
+  return null
+}
 
-export default SweetAlertComponent;
+export default SweetAlertComponent

@@ -24,11 +24,16 @@ a:hover {
 
 body {
   margin: 0;
-  /* display: flex; */
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;   
-   background-color: whitesmoke;
+  min-height: 100vh;
+  background-image: url('https://cdn.pixabay.com/photo/2019/06/28/12/02/open-book-4304049_1280.jpg');
+  /* background-color: whitesmoke; */
+  background-repeat: no-repeat;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 h1 {

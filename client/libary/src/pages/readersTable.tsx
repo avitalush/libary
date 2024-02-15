@@ -1,92 +1,109 @@
-import { useEffect, useState } from "react";
-import {Paper,Table,TableBody,TableCell,TableContainer, TableHead,TablePagination,TableRow,Box,Button,Typography,TextField,} from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { LibReader } from "../interfaces";
-import { deleteReader, getAllReaders } from "../api/reader";
-import { columns, convertData } from "../componnents/readersTable/config";
-import { styles } from "../componnents/readersTable/style";
+import {
+  Box,
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TextField,
+  Typography,
+} from '@mui/material'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { deleteReader, getAllReaders } from '../Api/reader'
+import { columns, convertData } from '../componnents/readersTable/config'
+import { styles } from '../componnents/readersTable/style'
+import showAlert from '../componnents/resApiModal'
+import { LibReader, RowReader } from '../interfaces'
 
 const ReaderTable: React.FC = () => {
-  const [rows, setRows] = useState<any[]>([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [nameFilter, setNameFilter] = useState<string>("");
+  const [rows, setRows] = useState<RowReader[]>([])
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [nameFilter, setNameFilter] = useState<string>('')
 
-  const navigate = useNavigate();
- const fetchDataAndSetRows = async () => {
-      const response = await getAllReaders();
-      const filteredReaders = response.filter(
-        (reader: LibReader) =>
-          reader.first_name.toLowerCase().includes(nameFilter.toLowerCase()) ||
-          reader.last_name.toLowerCase().includes(nameFilter.toLowerCase())
-      );
-      setRows(convertData(filteredReaders));
-    };
+  const navigate = useNavigate()
+  const fetchDataAndSetRows = async () => {
+    const response = await getAllReaders()
+    const filteredReaders = response.filter(
+      (reader: LibReader) =>
+        reader.firstName.toLowerCase().includes(nameFilter.toLowerCase()) ||
+        reader.lastName.toLowerCase().includes(nameFilter.toLowerCase()),
+    )
+    setRows(convertData(filteredReaders))
+  }
 
-    useEffect(() => {
-      fetchDataAndSetRows();
-  }, [nameFilter]);
-  
-  const handleDelete = async (event: React.MouseEvent<HTMLButtonElement>, id: number) => {
-    event.stopPropagation();
-    await deleteReader(id);
+  useEffect(() => {
+    fetchDataAndSetRows()
+  }, [nameFilter])
 
-    fetchDataAndSetRows();
-  };
+  const handleDelete = async (
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: string,
+  ) => {
+    event.stopPropagation()
+    const response = await deleteReader(id)
+    if (response?.error) {
+      showAlert({ isError: true, message: 'Something went wrong!' })
+    } else {
+      showAlert({ isError: false, message: 'Reader deleted successfully' })
+    }
+    fetchDataAndSetRows()
+  }
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
+    newPage: number,
   ) => {
-    setPage(newPage);
-  };
+    setPage(newPage)
+  }
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+    setRowsPerPage(+event.target.value)
+    setPage(0)
+  }
 
   const handleClick = (
     event: React.MouseEvent<HTMLTableRowElement>,
-    readerId: number
+    readerId: string,
   ) => {
-    event.stopPropagation();
-    navigate(`/borrowings/${readerId}`);
-  };
+    event.stopPropagation()
+    navigate(`/borrowings/${readerId}`)
+  }
 
   const handleAddReaderClick = () => {
-    navigate("/createreader");
-  };
+    navigate('/createreader')
+  }
 
   const handleNameFilterChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setNameFilter(event.target.value);
-  };
+    setNameFilter(event.target.value)
+  }
 
   return (
     <>
       <Box sx={styles.box}>
-        <Typography
-          variant="h2"
-          component="div"
-          sx={styles.titleTable}
-        >  Readers Table
-        </Typography>    
+        <Typography variant="h2" component="div" sx={styles.titleTable}>
+          {' '}
+          Readers Table
+        </Typography>
       </Box>
       <Button
         variant="contained"
-        color="primary"
-        sx={[styles.button,styles.cell]}
-
+        sx={[styles.button, styles.cell]}
         onClick={handleAddReaderClick}
-      >  Add Reader
-      </Button>
-      <Box
-        sx={styles.box}
       >
+        {' '}
+        Add Reader
+      </Button>
+      <Box sx={styles.box}>
         <TextField
           label="Filter by Name"
           variant="outlined"
@@ -103,7 +120,7 @@ const ReaderTable: React.FC = () => {
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
-                    align={"center"}
+                    align={'center'}
                     style={{ minWidth: column.minWidth }}
                   >
                     {column.label}
@@ -114,7 +131,7 @@ const ReaderTable: React.FC = () => {
             <TableBody>
               {rows
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => (
+                .map((row: RowReader) => (
                   <TableRow
                     hover
                     role="checkbox"
@@ -123,15 +140,30 @@ const ReaderTable: React.FC = () => {
                     onClick={(event) => handleClick(event, row.code)}
                   >
                     {columns.map((column) => (
-                      <TableCell key={column.id} align={"center"}   sx={styles.cell}>
-                        {row[column.id]}
+                      <TableCell
+                        key={column.id}
+                        align="center"
+                      >
+                        {column.id === 'code'
+                          ? row.code
+                          : column.id === 'Frist_Name'
+                            ? row.Frist_Name
+                            : column.id === 'Last_Name'
+                              ? row.Last_Name
+                              : column.id === 'Age'
+                                ? row.Age
+                                : ''}
                       </TableCell>
                     ))}
-                          <TableCell align="center">
-                        <Button variant="outlined" color="error" onClick={(e)=>handleDelete(e,row.code)}>
-                          Delete
-                        </Button>
-                      </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={(e) => handleDelete(e, row.code)}
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
@@ -148,6 +180,6 @@ const ReaderTable: React.FC = () => {
         />
       </Paper>
     </>
-  );
-};
-export default ReaderTable;
+  )
+}
+export default ReaderTable

@@ -1,10 +1,11 @@
 export const styles = {
   paper: {
-    width: '70%',
+    width: '65%',
     overflow: 'hidden',
     margin: '0 auto',
-  },    titleTable: { fontFamily: 'Tangerine, serif',
-  textShadow:" 4px 4px 4px #aaa",
+  },
+  titleTable: {
+    textShadow: ' 4px 4px 4px #aaa',
     textAlign: 'center',
     fontSize: '12vh',
     color: 'black',
@@ -16,11 +17,11 @@ export const styles = {
   tableHeadCell: {
     minWidth: 100,
     textAlign: 'center',
-  },cell:{
-    fontFamily: 'Tangerine, serif',
-    fontSize:"30px"
   },
-box:{
-  mb:5
+  cell: {
+    fontSize: '30px',
+  },
+  box: {
+    mb: 5,
+  },
 }
-};

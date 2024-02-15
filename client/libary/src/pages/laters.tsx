@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 import {
   Paper,
   Table,
@@ -8,50 +8,45 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-} from "@mui/material";
-import { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { columns, convertData } from "../componnents/laters/config";
-import { styles } from "../componnents/laters/style";
-import { getAllLaters } from "../api/borrowing";
+} from '@mui/material'
+import { useState, useEffect } from 'react'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { columns, convertData } from '../componnents/laters/config'
+import { styles } from '../componnents/laters/style'
+import { getAllLaters } from '../Api/borrowing'
 
 const LatersTable: React.FC = () => {
-  const [rows, setRows] = useState<any[]>([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
- useEffect(() => {
+  const [rows, setRows] = useState<any[]>([])
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  useEffect(() => {
     const fetchDataAndSetRows = async () => {
-        const response = await getAllLaters();
-        setRows(convertData(response));
-    
-    };
+      const response = await getAllLaters()
+      setRows(convertData(response))
+    }
 
-    fetchDataAndSetRows();
-  }, []);
+    fetchDataAndSetRows()
+  }, [])
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
+    newPage: number,
   ) => {
-    setPage(newPage);
-  };
+    setPage(newPage)
+  }
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+    setRowsPerPage(+event.target.value)
+    setPage(0)
+  }
 
   return (
     <>
       <Box sx={styles.box}>
-        <Typography
-          variant="h2"
-          component="div"
-          sx={styles.titleTable}
-        >
+        <Typography variant="h2" component="div" sx={styles.titleTable}>
           Laters Table
         </Typography>
       </Box>
@@ -63,7 +58,7 @@ const LatersTable: React.FC = () => {
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
-                    align={"center"}
+                    align={'center'}
                     sx={styles.cell}
                     style={{ minWidth: column.minWidth }}
                   >
@@ -84,15 +79,15 @@ const LatersTable: React.FC = () => {
                       key={row.code}
                     >
                       {columns.map((column) => {
-                        const value = row[column.id];
+                        const value = row[column.id]
                         return (
-                          <TableCell key={column.id} align={"center"}>
+                          <TableCell key={column.id} align={'center'}>
                             {value}
                           </TableCell>
-                        );
+                        )
                       })}
                     </TableRow>
-                  );
+                  )
                 })}
             </TableBody>
           </Table>
@@ -108,7 +103,7 @@ const LatersTable: React.FC = () => {
         />
       </Paper>
     </>
-  );
-};
+  )
+}
 
-export default LatersTable;
+export default LatersTable
