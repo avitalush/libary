@@ -1,60 +1,37 @@
-import {NextFunction, Request, Response} from "express";
-import { allBooks, createBook, getBooksByInformationId } from "../repositories/libBook.repository";
-import { createInformation } from "../repositories/libBookInformation.repository";
+import BookRepository from "../repositories/libBook.repository";
+import BookInformationRepository from "../repositories/libBookInformation.repository";
+import { LibBookInformation, createLibBookInformation } from "../types";
 
+const BookService = {
+  all: () => BookRepository.findAll(),
+  create: (book: LibBookInformation) => BookRepository.saveNew(book),
+  createBookWithCopies: async (
+    bookInfo: createLibBookInformation,
+    copiesNumber: number,
+  ) => {
+    const createInfoBook = await BookInformationRepository.createNew(bookInfo);
+    await BookService.addCopies(createInfoBook, copiesNumber);
+  },
+  addCopies: async (book: LibBookInformation, copiesNumber: number) => {
+    await Promise.all(
+      Array.from({ length: copiesNumber }, async () => {
+        await BookRepository.saveNew(book);
+      }),
+    );
+    return "success";
+  },
+  update: async (bookInfo: string, key: string, value: boolean) => {
+    const bookToUpdate = BookRepository.findById(bookInfo);
+    if (!bookToUpdate) {
+      throw new Error("Book not found");
+    }
 
+    bookToUpdate[key] = value;
+    return BookRepository.save(await bookToUpdate);
+  },
 
-
-  export const all= async() =>{
-   
-      const books=await allBooks();
-  
-      
-     return books;
-  
-  }
-
-
-  export const create = async (book) => {
- 
-     
-      const informationRep = createBook(book);
-  
-      return informationRep;
-  
-  };
-  
-  export const createBookWithCopies = async (bookInfo, copiesNumber)=> {
-    
-
-   const create_info_book=await createInformation(bookInfo);
-
-    const copies = Array.from({ length: copiesNumber }, async () => {
-
-     const res= await createBook(create_info_book);
-     
-
-    });
-
-  
-};
-export const addCopies = async (bookId, copiesNumber)=> {
-    
- 
-  const copies = Array.from({ length: copiesNumber }, async () => {
-  
-    await createBook(bookId);
-
-  });
-  return "success"
-
-};
-export const getBooksByInformation = async (bookInfo)=> {
-
-    const copiesBooks = await getBooksByInformationId(bookInfo);
-
-    return copiesBooks;
-
+  getBooksByInformation: async (bookInfo: string) =>
+    BookRepository.findInformationId(bookInfo),
 };
 
-
+export default BookService;

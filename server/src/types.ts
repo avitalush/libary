@@ -1,80 +1,77 @@
-// libBook.entity.types.ts
-export type LibBook ={
-  id: number;
-  is_taken: boolean;
-  information: LibBookInformation;
-  borrowings: LibBorrowing[];
-}
+export type LibBook = {
+  id: string;
+  isTaken: boolean;
+  // information: LibBookInformation;
+  //borrowings: LibBorrowing[];
+};
 
-// libBookInformation.entity.types.ts
-export type LibBookInformation ={
-  id: number;
+export type LibBookInformation = {
+  id: string;
   name: string;
-  publication_year: number;
+  publicationYear: Date;
+  isAvailable?: boolean;
   author: string;
   price: number;
-  publisher: LibPublisher;
-}
+  isDeleted: boolean;
+  //publisher: LibPublisher;
+  books: LibBook[];
+};
 
-// libBorrowing.entity.types.ts
-export type LibBorrowing ={
-  id: number;
-  borrow_date: Date;
-  return_date: Date | null;
-  book_id: LibBook;
-  reader_id: LibReader;
-}
-
-// libPublisher.entity.types.ts
-export type LibPublisher= {
-  id: number;
+export type LibBorrowing = {
+  id: string;
+  borrowDate: Date;
+  returnDate: Date | null;
+  bookId: LibBook;
+  readerId: LibReader;
+};
+export type LibPublisher = {
+  id: string;
   name: string;
   address: string;
   email: string;
-  information_books: LibBookInformation[];
-}
+  isDeleted: boolean;
+  informationBooks: LibBookInformation[];
+};
 
-// libReader.entity.types.ts
-export type LibReader ={
-  id: number;
-  first_name: string;
-  last_name: string;
-  birth_date: Date | null;
-  borrowings: LibBorrowing[];
-  age: number | undefined;
-}
-export type createBorrow={
-  book_id: number,
-  reader_id: number,
-}
-export type readerDetails={
-  id: number;
+export type LibReader = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  birthDate: Date | null;
+  age?: number;
+};
+export type createBorrow = {
+  bookId: string;
+  readerId: string;
+};
+export type readerDetails = {
+  id: string;
   age: number;
-  first_name: string;
-  last_name: string;
-}
+  firstName: string;
+  lastName: string;
+};
 export type ResultBorrowing = {
-  res_borrowings: {
+  resBorrowings: {
     id: string;
-    borrow_date: Date;
-    return_date: Date | null;
-    book_id: {
+    borrowDate: Date;
+    returnDate: Date | null;
+    bookId: {
       id: string;
-      is_taken: boolean;
+      isTaken: boolean;
       information: LibBookInformation;
     };
-    reader_id: {
+    readerId: {
       id: string;
-      first_name: string;
-      last_name: string;
-      birth_date: Date;
+      firstName: string;
+      lastName: string;
+      birthDate: Date;
     };
   };
 };
-export type createLibBookInformation ={
+export type createLibBookInformation = {
   name: string;
-  publication_year: number;
+  publicationYear: Date;
   author: string;
   price: number;
-  publisher: number;
-}
+  publisher: string;
+};

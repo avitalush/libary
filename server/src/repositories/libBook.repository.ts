@@ -1,43 +1,31 @@
 import { Lib_book } from "../entity/libBook.entity";
 import { LibBook, LibBookInformation } from "../types";
 
-export const allBooks =  () => Lib_book.find(); 
- 
+const BookRepository = {
+  findAll: () => Lib_book.find(),
+  findById: (bookId: string) => Lib_book.findOneBy({ id: bookId }),
+  saveNew: (book: LibBookInformation) => Lib_book.save({ information: book }),
+  save: (book: LibBook) =>
+    Lib_book.save({ id: book.id, isTaken: book.isTaken }),
 
-
-export const createBook = (book: LibBookInformation) => {
-  console.log({book});
-  
-  return Lib_book.save({ information: book });
-}
-  
-
-
-
-export const getBooksByInformationId = (informationId: number) => {
-  return  Lib_book.find({
-    where: {
-      information: { id: informationId },
-    },
-    relations: ["borrowings"],
-  });
+  findInformationId: (informationId: string) => {
+    return Lib_book.find({
+      where: {
+        information: { id: informationId },
+      },
+      relations: {
+        borrowings: true,
+      },
+    });
+  },
+  getBookForTake: (informationId: string) => {
+    return Lib_book.findOne({
+      where: {
+        information: { id: informationId },
+        isTaken: false,
+      },
+    });
+  },
 };
-export const getBooksFortake =  (informationId: number) => {
-  return Lib_book.findOne({
-    where: {
-      information: { id: informationId },
-      is_taken: false,
-    },
-  });
-};
-export const update = async (book_id:number, key:string, value:boolean) => {
-  const bookToUpdate = await Lib_book.findOneBy({ id: book_id });
-  if (!bookToUpdate) {
-    throw new Error("Book not found");
-  }
 
-  bookToUpdate[key] = value;
-  const res= Lib_book.save(await bookToUpdate);
-  return res;
-  
-};
+export default BookRepository;

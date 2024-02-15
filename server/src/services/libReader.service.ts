@@ -1,19 +1,13 @@
-import { allReaders, createReader, deleteReader, getReaderById } from "../repositories/libReader.repository";
-import { findBorrowingsByIdReader } from "../repositories/libBorrowing.repository";
+import BorrowingRepository from "../repositories/libBorrowing.repository";
+import ReaderRepository from "../repositories/libReader.repository";
 import { LibReader } from "../types";
 
+const ReaderService = {
+  all: () => ReaderRepository.findAll(),
+  create: (reader: LibReader) => ReaderRepository.save(reader),
+  getBorrowingsByReader: (reader_id: string) =>
+    BorrowingRepository.findByReader(reader_id),
+  deleteReaders: (reader_id: string) => ReaderRepository.remove(reader_id),
+};
 
-
-
-  export const all= () =>allReaders();
-
-  
-
-
-  export const create= (reader:LibReader) =>createReader(reader);
-
-  
-
-
-  export const getBorrowingsByReader= (reader_id:string) =>findBorrowingsByIdReader(reader_id);
-  export const deleteReaders= (reader_id:number) =>deleteReader(reader_id);
+export default ReaderService;

@@ -1,17 +1,14 @@
 {
-   "compilerOptions": {    
-      "esModuleInterop": true,
+  "compilerOptions": {
+    "esModuleInterop": true,
 
-      "lib": [
-         "es5",
-         "es6"
-      ],
-      "target": "es2017",
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "outDir": "./build",
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true,
-      "sourceMap": true
-   }
+    "lib": ["es5", "es6"],
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./build",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true
+  }
 }

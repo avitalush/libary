@@ -1,81 +1,35 @@
-import { NextFunction, Request, Response } from "express";
-import { allBorrowings, createBorrowings, findInformation, getOverdueReturns, getTopBorrowedBooks,allBorrowingsIncludingReturned, updateReturnDate } from "../repositories/libBorrowing.repository";
-import {  getBooksFortake, update } from "../repositories/libBook.repository";
-
-import { findBorrowingsById } from "../repositories/libBorrowing.repository";
-import { getReaderById } from "../repositories/libReader.repository";
+import BookRepository from "../repositories/libBook.repository";
+import BorrowingRepository from "../repositories/libBorrowing.repository";
+import ReaderRepository from "../repositories/libReader.repository";
 import { createBorrow } from "../types";
-import { Lib_borrowing } from "../entity/libBorrowing.entity";
+import BookService from "./libBook.service";
+
+const BorrowingService = {
+  all: () => BorrowingRepository.findAllWithReaders(),
+  create: async (book: createBorrow) => {
+    const resBook = await BookRepository.getBookForTake(book.bookId);
+    const readerRes = await ReaderRepository.getById(book.readerId);
 
 
 
-export const all = async () => {
-  
+    if (!readerRes) return;
+    const { id, age, firstName, lastName } = readerRes;
+    const readerDetails = { id, age, firstName, lastName };
 
-    const books = await allBorrowingsIncludingReturned();
+    await BorrowingRepository.add(resBook, readerDetails);
+    await BookService.update(resBook.id, "isTaken", true);
+  },
 
-
-    return books;
-
-}
-
-
-export const create = async (book:createBorrow) => {
-  
-
-    const res_book = await getBooksFortake(book.book_id)
-
-    
-    const bookDetails = res_book
-    const reader_res = await getReaderById(book.reader_id)
-    
-    if (reader_res) {
-      const { id, age, first_name, last_name } = reader_res;
-      const readerDetails = {
-        id: id,
-        age: age,
-        first_name: first_name,
-        last_name: last_name
-      };
-    const res_save = createBorrowings(bookDetails,readerDetails);
-
-  await update(res_book.id, "is_taken", true)
-      
-      
-      return res_save;
-    }
-
-}
-
-
-export const updateDate = async (borrowingId:number) => {
-  
-    const res_borrowings = await findBorrowingsById(borrowingId);
-   
-    const informationRep =await updateReturnDate(res_borrowings);
-
-console.log(informationRep);
-
-   await update(res_borrowings.book_id.id, "is_taken", false)
-
+  updateDate: async (borrowingId: string) => {
+    const res_borrowings =
+      await BorrowingRepository.findBorrowingsById(borrowingId);
+    const informationRep =
+      await BorrowingRepository.updateReturnDate(res_borrowings);
+    BookService.update(res_borrowings.book.id, "is_taken", false);
     return informationRep;
+  },
+  checkOverdueReturns: () => BorrowingRepository.getOverdueReturns(),
+  getTopTenBorrowedBooks: () => BorrowingRepository.getTopBorrowedBooks(),
+};
 
-}
-export const checkOverdueReturns = async () => {
-
-    const overdueBorrowings = await getOverdueReturns();
-    return overdueBorrowings;
- 
-}
-export const getTopTenBorrowedBooks = async () => {
- 
-
-    const books = await getTopBorrowedBooks();
-
-
-    return books;
-
-}
-
-
-
+export default BorrowingService;

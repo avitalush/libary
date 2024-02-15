@@ -1,51 +1,52 @@
-
-import express, { Request, Response ,NextFunction} from "express";
-import { Lib_publisher } from "../entity/libPublisher.entity";
+import express, { NextFunction, Request, Response } from "express";
 import validate from "../helper/validate";
 import { createPublisherSchema } from "../schema/libPublisher.schema";
-import { all, create, getReportData } from "../services/libPublisher.service";
+import PublisherService from "../services/libPublisher.service";
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response,next:NextFunction) => {
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
- 
-      const publishers = await all();
+    const publishers = await PublisherService.all();
 
-      res.status(200).json(publishers);
+    res.status(200).json(publishers);
   } catch (error) {
-      
-      res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
-router.post("/", validate(createPublisherSchema), async (req: Request, res: Response,next:NextFunction) => {
-  try {
-
-     
-      await create(req.body);
+router.post(
+  "/",
+  validate(createPublisherSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await PublisherService.create(req.body);
 
       res.status(200).json({ message: "success" });
-  } catch (error) {
+    } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-router.get("/reportdata", async (req: Request, res: Response,next:NextFunction) => {
-  try {
-
-     
-   const result=   await getReportData();
+    }
+  },
+);
+router.get(
+  "/reportdata",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await PublisherService.getReportData();
 
       res.status(200).json(result);
-  } catch (error) {
+    } catch (error) {
       res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-router.delete("/:id", async (req: Request, res: Response) => {
-  await Lib_publisher.delete(req.params.id);
+    }
+  },
+);
+router.delete("/:publisherId", async (req: Request, res: Response) => {
+  try {
+    const result = await PublisherService.delete(req.params.publisherId);
 
-  res.json({
-    message: "Record deleted successfully."
-  });
+    res.status(200).json({ message: result });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 module.exports = router;
